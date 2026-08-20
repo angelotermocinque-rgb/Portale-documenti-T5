@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portale Documenti – Termocinque Panzini</title>
+<style>
+:root{--navy:#0a1628;--navy-soft:#152238;--accent:#2563eb;--bg:#f4f6f8;--white:#fff;--border:#d0d7e0;--muted:#64748b;--box:#f8fafc;--ok:#0f766e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:#0f172a;line-height:1.55;padding:20px 12px 48px}
+.page{max-width:880px;margin:0 auto;background:var(--white);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden}
+.header{display:flex;align-items:center;gap:16px;padding:14px 24px;background:#fff;border-bottom:1px solid var(--border)}
+.header img{height:44px;width:auto;display:block}
+.header-text{color:var(--muted);font-size:.8em;letter-spacing:.02em}
+.steps{display:flex;gap:8px;padding:14px 24px;background:var(--box);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.step-pill{padding:6px 12px;border-radius:20px;font-size:.78em;font-weight:600;background:#dde3ea;color:var(--muted)}
+.step-pill.active{background:var(--navy);color:#fff;box-shadow:0 1px 3px rgba(10,22,40,.2)}
+.step-pill.done{background:var(--ok);color:#fff}
+.content{padding:28px 28px 36px}
+h1{font-size:1.35em;color:var(--navy);margin-bottom:8px}
+.intro{color:var(--muted);font-size:.95em;margin-bottom:24px}
+h2{font-size:.92em;color:var(--navy);text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid var(--navy);padding-bottom:6px;margin:26px 0 14px}
+.row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.field{flex:1;min-width:150px}
+.field.full{flex:100%}
+.field.small{flex:0 0 100px}
+label{display:block;font-size:.72em;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+input[type=text],input[type=email],input[type=file],select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:4px;font-size:.95em;background:#fff;transition:border-color .15s}
+input:focus,select:focus{outline:none;border-color:var(--navy)}
+.box{border:1.5px solid var(--navy);background:var(--box);padding:14px 16px;border-radius:3px;margin:14px 0}
+.box-title{font-weight:700;color:var(--navy);margin-bottom:10px;font-size:.9em}
+.choice-card{border:2px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:12px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:flex-start;gap:12px}
+.choice-card:hover{border-color:var(--navy)}
+.choice-card.selected{border-color:var(--navy);background:#eef2f6}
+.choice-card input{margin-top:3px;flex-shrink:0}
+.choice-card strong{display:block;margin-bottom:3px}
+.choice-card span{font-size:.88em;color:var(--muted)}
+.tipo-row,.radio-row{display:flex;gap:20px;flex-wrap:wrap;margin:10px 0}
+.tipo-row label,.radio-row label{text-transform:none;font-size:.95em;font-weight:500;color:#1a1a1a;display:flex;align-items:center;gap:8px;cursor:pointer}
+.privacy{font-size:.8em;max-height:140px;overflow-y:auto;background:#f7f8fa;border:1px solid var(--border);padding:14px;border-radius:3px;margin:12px 0}
+canvas.sig{width:100%;height:130px;border:1px solid var(--border);background:#fff;border-radius:3px;touch-action:none;cursor:crosshair;display:block}
+.clear-btn{margin-top:6px;padding:5px 12px;font-size:.8em;background:transparent;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted)}
+.upload-box{border:1px dashed var(--border);border-radius:6px;padding:14px;margin-bottom:14px;background:#fafbfc}
+.upload-box>label.title{text-transform:none;font-size:.95em;color:#1a1a1a;font-weight:600;margin-bottom:10px;display:block}
+.upload-box .hint{font-size:.82em;color:var(--muted);margin-top:6px}
+.upload-row{display:flex;gap:12px;flex-wrap:wrap}
+.upload-col{flex:1;min-width:140px}
+.upload-col label{margin-bottom:6px}
+.upload-preview{max-width:100%;max-height:90px;margin-top:8px;border-radius:3px;display:none;object-fit:contain}
+.nav{display:flex;gap:12px;margin-top:28px}
+button{padding:12px 22px;border:none;border-radius:3px;font-weight:600;cursor:pointer;font-size:.9em}
+.btn-primary{background:var(--navy);color:#fff;flex:1;border-radius:4px;letter-spacing:.02em}
+.btn-primary:hover{background:var(--navy-soft);opacity:.95}
+.btn-primary:disabled{background:#8a9aab;cursor:not-allowed}
+.btn-secondary{background:#dde3ea;color:var(--navy)}
+.hidden{display:none!important}
+.gentle{background:#f0f7f4;border:1px solid #c5ddd0;padding:14px 16px;border-radius:6px;font-size:.9em;color:#1e4d3a;margin:14px 0}
+.footer{text-align:center;font-size:.75em;color:#888;padding:16px;border-top:1px solid var(--border)}
+input.invalid,select.invalid{border-color:#dc2626!important;background:#fef2f2}.field-error{color:#dc2626;font-size:.75em;margin-top:4px}@media(max-width:600px){.content{padding:20px 16px}.field,.field.small{min-width:100%}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAIAAAAhotZpAAAKQ2lDQ1BJQ0MgcHJvZmlsZQAAeNqdU3dYk/cWPt/3ZQ9WQtjwsZdsgQAiI6wIyBBZohCSAGGEEBJAxYWIClYUFRGcSFXEgtUKSJ2I4qAouGdBiohai1VcOO4f3Ke1fXrv7e371/u855zn/M55zw+AERImkeaiagA5UoU8Otgfj09IxMm9gAIVSOAEIBDmy8JnBcUAAPADeXh+dLA//AGvbwACAHDVLiQSx+H/g7pQJlcAIJEA4CIS5wsBkFIAyC5UyBQAyBgAsFOzZAoAlAAAbHl8QiIAqg0A7PRJPgUA2KmT3BcA2KIcqQgAjQEAmShHJAJAuwBgVYFSLALAwgCgrEAiLgTArgGAWbYyRwKAvQUAdo5YkA9AYACAmUIszAAgOAIAQx4TzQMgTAOgMNK/4KlfcIW4SAEAwMuVzZdL0jMUuJXQGnfy8ODiIeLCbLFCYRcpEGYJ5CKcl5sjE0jnA0zODAAAGvnRwf44P5Dn5uTh5mbnbO/0xaL+a/BvIj4h8d/+vIwCBAAQTs/v2l/l5dYDcMcBsHW/a6lbANpWAGjf+V0z2wmgWgrQevmLeTj8QB6eoVDIPB0cCgsL7SViob0w44s+/zPhb+CLfvb8QB7+23rwAHGaQJmtwKOD/XFhbnauUo7nywRCMW735yP+x4V//Y4p0eI0sVwsFYrxWIm4UCJNx3m5UpFEIcmV4hLpfzLxH5b9CZN3DQCshk/ATrYHtctswH7uAQKLDljSdgBAfvMtjBoLkQAQZzQyefcAAJO/+Y9AKwEAzZek4wAAvOgYXKiUF0zGCAAARKCBKrBBBwzBFKzADpzBHbzAFwJhBkRADCTAPBBCBuSAHAqhGJZBGVTAOtgEtbADGqARmuEQtMExOA3n4BJcgetwFwZgGJ7CGLyGCQRByAgTYSE6iBFijtgizggXmY4EImFINJKApCDpiBRRIsXIcqQCqUJqkV1II/ItchQ5jVxA+pDbyCAyivyKvEcxlIGyUQPUAnVAuagfGorGoHPRdDQPXYCWomvRGrQePYC2oqfRS+h1dAB9io5jgNExDmaM2WFcjIdFYIlYGibHFmPlWDVWjzVjHVg3dhUbwJ5h7wgkAouAE+wIXoQQwmyCkJBHWExYQ6gl7CO0EroIVwmDhDHCJyKTqE+0JXoS+cR4YjqxkFhGrCbuIR4hniVeJw4TX5NIJA7JkuROCiElkDJJC0lrSNtILaRTpD7SEGmcTCbrkG3J3uQIsoCsIJeRt5APkE+S+8nD5LcUOsWI4kwJoiRSpJQSSjVlP+UEpZ8yQpmgqlHNqZ7UCKqIOp9aSW2gdlAvU4epEzR1miXNmxZDy6Qto9XQmmlnafdoL+l0ugndgx5Fl9CX0mvoB+nn6YP0dwwNhg2Dx0hiKBlrGXsZpxi3GS+ZTKYF05eZyFQw1zIbmWeYD5hvVVgq9ip8FZHKEpU6lVaVfpXnqlRVc1U/1XmqC1SrVQ+rXlZ9pkZVs1DjqQnUFqvVqR1Vu6k2rs5Sd1KPUM9RX6O+X/2C+mMNsoaFRqCGSKNUY7fGGY0hFsYyZfFYQtZyVgPrLGuYTWJbsvnsTHYF+xt2L3tMU0NzqmasZpFmneZxzQEOxrHg8DnZnErOIc4NznstAy0/LbHWaq1mrX6tN9p62r7aYu1y7Rbt69rvdXCdQJ0snfU6bTr3dQm6NrpRuoW623XP6j7TY+t56Qn1yvUO6d3RR/Vt9KP1F+rv1u/RHzcwNAg2kBlsMThj8MyQY+hrmGm40fCE4agRy2i6kcRoo9FJoye4Ju6HZ+M1eBc+ZqxvHGKsNN5l3Gs8YWJpMtukxKTF5L4pzZRrmma60bTTdMzMyCzcrNisyeyOOdWca55hvtm82/yNhaVFnMVKizaLx5balnzLBZZNlvesmFY+VnlW9VbXrEnWXOss623WV2xQG1ebDJs6m8u2qK2brcR2m23fFOIUjynSKfVTbtox7PzsCuya7AbtOfZh9iX2bfbPHcwcEh3WO3Q7fHJ0dcx2bHC866ThNMOpxKnD6VdnG2ehc53zNRemS5DLEpd2lxdTbaeKp26fesuV5RruutK10/Wjm7ub3K3ZbdTdzD3Ffav7TS6bG8ldwz3vQfTw91jicczjnaebp8LzkOcvXnZeWV77vR5Ps5wmntYwbcjbxFvgvct7YDo+PWX6zukDPsY+Ap96n4e+pr4i3z2+I37Wfpl+B/ye+zv6y/2P+L/hefIW8U4FYAHBAeUBvYEagbMDawMfBJkEpQc1BY0FuwYvDD4VQgwJDVkfcpNvwBfyG/ljM9xnLJrRFcoInRVaG/owzCZMHtYRjobPCN8Qfm+m+UzpzLYIiOBHbIi4H2kZmRf5fRQpKjKqLupRtFN0cXT3LNas5Fn7Z72O8Y+pjLk722q2cnZnrGpsUmxj7Ju4gLiquIF4h/hF8ZcSdBMkCe2J5MTYxD2J43MC52yaM5zkmlSWdGOu5dyiuRfm6c7Lnnc8WTVZkHw4hZgSl7I/5YMgQlAvGE/lp25NHRPyhJuFT0W+oo2iUbG3uEo8kuadVpX2ON07fUP6aIZPRnXGMwlPUit5kRmSuSPzTVZE1t6sz9lx2S05lJyUnKNSDWmWtCvXMLcot09mKyuTDeR55m3KG5OHyvfkI/lz89sVbIVM0aO0Uq5QDhZML6greFsYW3i4SL1IWtQz32b+6vkjC4IWfL2QsFC4sLPYuHhZ8eAiv0W7FiOLUxd3LjFdUrpkeGnw0n3LaMuylv1Q4lhSVfJqedzyjlKD0qWlQyuCVzSVqZTJy26u9Fq5YxVhlWRV72qX1VtWfyoXlV+scKyorviwRrjm4ldOX9V89Xlt2treSrfK7etI66Trbqz3Wb+vSr1qQdXQhvANrRvxjeUbX21K3nShemr1js20zcrNAzVhNe1bzLas2/KhNqP2ep1/XctW/a2rt77ZJtrWv913e/MOgx0VO97vlOy8tSt4V2u9RX31btLugt2PGmIbur/mft24R3dPxZ6Pe6V7B/ZF7+tqdG9s3K+/v7IJbVI2jR5IOnDlm4Bv2pvtmne1cFoqDsJB5cEn36Z8e+NQ6KHOw9zDzd+Zf7f1COtIeSvSOr91rC2jbaA9ob3v6IyjnR1eHUe+t/9+7zHjY3XHNY9XnqCdKD3x+eSCk+OnZKeenU4/PdSZ3Hn3TPyZa11RXb1nQ8+ePxd07ky3X/fJ897nj13wvHD0Ivdi2yW3S609rj1HfnD94UivW2/rZffL7Vc8rnT0Tes70e/Tf/pqwNVz1/jXLl2feb3vxuwbt24m3Ry4Jbr1+Hb27Rd3Cu5M3F16j3iv/L7a/eoH+g/qf7T+sWXAbeD4YMBgz8NZD+8OCYee/pT/04fh0kfMR9UjRiONj50fHxsNGr3yZM6T4aeypxPPyn5W/3nrc6vn3/3i+0vPWPzY8Av5i8+/rnmp83Lvq6mvOscjxx+8znk98ab8rc7bfe+477rfx70fmSj8QP5Q89H6Y8en0E/3Pud8/vwv94Tz+4A5JREAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADJ2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4xLWMwMDAgNzkuYjBmOGJlOTAsIDIwMjEvMTIvMTUtMjE6MjU6MTUgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCAyMy4yIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5NEUxMzdEOTYyNzExRUM5M0FFQkIwMzA1NTg5MEUwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5NEUxMzdFOTYyNzExRUM5M0FFQkIwMzA1NTg5MEUwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk0RTEzN0I5NjI3MTFFQzkzQUVCQjAzMDU1ODkwRTAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk0RTEzN0M5NjI3MTFFQzkzQUVCQjAzMDU1ODkwRTAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4VBlaJAAAHBElEQVR42uycC0xTVxjHBy0PW2gRkWdB3gIiw2cEFdFNUXQqghDdcOLUTZwPXMRNs7hM2NBkW7It0wWViCjqUAhONIjM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" alt="T5">
+    <div class="header-text">Portale documenti cliente</div>
+  </div>
+
+  <div class="steps" id="stepPills">
+    <div class="step-pill active" data-step="1">1. Anagrafica</div>
+    <div class="step-pill" data-step="2">2. Le sue scelte</div>
+    <div class="step-pill" data-step="3">3. Dettagli</div>
+    <div class="step-pill" data-step="4">4. Documenti</div>
+    <div class="step-pill" data-step="5">5. Conferma</div>
+  </div>
+  <div class="content">
+
+    <div id="step1">
+      <h1>Benvenuto</h1>
+      <p class="intro">La accompagniamo passo dopo passo. Iniziamo dai suoi dati anagrafici.</p>
+      <div class="tipo-row">
+        <label><input type="radio" name="tipo_soggetto" value="privato" checked onchange="toggleTipo()"> Sono un privato</label>
+        <label><input type="radio" name="tipo_soggetto" value="ditta" onchange="toggleTipo()"> Sono una ditta / società</label>
+      </div>
+      <div id="sez_privato">
+        <div class="box">
+          <div class="box-title">I suoi dati</div>
+          <div class="row">
+            <div class="field"><label>Cognome *</label><input type="text" id="cognome"></div>
+            <div class="field"><label>Nome *</label><input type="text" id="nome"></div>
+          </div>
+          <div class="row"><div class="field full"><label>Codice Fiscale *</label><input type="text" id="codice_fiscale"></div></div>
+          <div class="row">
+            <div class="field"><label>Luogo di nascita</label><input type="text" id="luogo_nascita"></div>
+            <div class="field"><label>Data di nascita</label><input type="text" id="data_nascita" placeholder="GG/MM/AAAA" inputmode="numeric" maxlength="10" autocomplete="bday"></div>
+          </div>
+        </div>
+      </div>
+      <div id="sez_ditta" class="hidden">
+        <div class="box">
+          <div class="box-title">Dati della ditta</div>
+          <div class="row"><div class="field full"><label>Ragione Sociale *</label><input type="text" id="ragione_sociale"></div></div>
+          <div class="row">
+            <div class="field"><label>Cognome referente</label><input type="text" id="cognome_ref"></div>
+            <div class="field"><label>Nome referente</label><input type="text" id="nome_ref"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Partita IVA</label><input type="text" id="partita_iva"></div>
+            <div class="field"><label>Codice Fiscale Ditta</label><input type="text" id="cf_ditta"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Codice Univoco (SDI)</label><input type="text" id="codice_univoco"></div>
+            <div class="field"><label>PEC</label><input type="text" id="pec"></div>
+          </div>
+        </div>
+      </div>
+      <h2>Indirizzo e contatti</h2>
+      <div class="row"><div class="field full"><label>Indirizzo</label><input type="text" id="indirizzo"></div></div>
+      <div class="row">
+        <div class="field small"><label>CAP</label><input type="text" id="cap"></div>
+        <div class="field"><label>Città</label><input type="text" id="citta"></div>
+        <div class="field small"><label>Prov.</label><input type="text" id="prov"></div>
+      </div>
+      <div class="row"><div class="field full"><label>Lavori eseguiti in via (se diverso)</label><input type="text" id="indirizzo_lavori"></div></div>
+      <div class="row">
+        <div class="field"><label>Telefono</label><input type="text" id="telefono"></div>
+        <div class="field"><label>E-mail *</label><input type="email" id="email"></div>
+      </div>
+      <h2>Pagamento</h2>
+      <div class="row">
+        <div class="field">
+          <label>Modalità</label>
+          <select id="modalita_pagamento" onchange="toggleRiba()">
+            <option value="">Seleziona...</option>
+            <option value="Bonifico">Bonifico</option>
+            <option value="RIBA">RIBA</option>
+            <option value="RID / SDD">RID / SDD</option>
+            <option value="Altro">Altro</option>
+          </select>
+        </div>
+      </div>
+      <div id="riba_section" class="box hidden">
+        <div class="box-title">Dati RIBA</div>
+        <div class="row"><div class="field full"><label>Banca</label><input type="text" id="banca_appoggio"></div></div>
+        <div class="row">
+          <div class="field"><label>ABI</label><input type="text" id="abi"></div>
+          <div class="field"><label>CAB</label><input type="text" id="cab"></div>
+        </div>
+      </div>
+      <h2>Informativa privacy</h2>
+      <div class="privacy" style="max-height:320px;font-size:.78em;line-height:1.45">
+        <strong>INFORMATIVA AI SENSI DELL’ART. 13 GDPR 679/2016</strong><br>
+        Soggetti interessati: Clienti<br><br>
+        <strong>TERMOCINQUE – PANZINI SRL</strong>, in qualità di Titolare del trattamento, la informa ai sensi dell’art. 13 del GDPR 679/2016 che i dati da Lei fornitici potranno formare oggetto di trattamento, nel rispetto della normativa sopra richiamata e degli obblighi di riservatezza.<br><br>
+        Per trattamento dei dati personali si intende la loro raccolta, registrazione, organizzazione, strutturazione, conservazione, adattamento o modifica, l’estrazione, la consultazione, l’uso, la comunicazione mediante trasmissione, diffusione o qualsiasi altra forma di messa a disposizione, il raffronto o l’interconnessione, la limitazione, la cancellazione o la distruzione di dati anche se non registrati in una banca di dati.<br><br>
+        I dati personali a Lei riferibili saranno trattati nel rispetto delle modalità indicate nell’art. 5 del GDPR 679/2016: in modo lecito, corretto e trasparente; raccolti per finalità determinate, esplicite e legittime; adeguati, pertinenti e limitati a quanto necessario; esatti e, se necessario, aggiornati; conservati per un arco di tempo non superiore al conseguimento delle finalità; trattati in maniera da garantire un’adeguata sicurezza.<br><br>
+        <strong>Titolare del trattamento</strong><br>
+        TERMOCINQUE – PANZINI s.r.l.<br>
+        Via Della Repubblica, 5 – 60020 Sirolo (AN) – P.IVA 01469270423<br><br>
+        <strong>Responsabile della protezione dati (DPO)</strong><br>
+        Non è stato nominato.<br><br>
+        <strong>Provenienza dei dati</strong><br>
+        Dati raccolti presso l’interessato.<br><br>
+        <strong>Base giuridica del trattamento</strong><br>
+        • Consenso dell’interessato per una o più specifiche finalità<br>
+        • Esecuzione di un contratto di cui l’interessato è parte o misure precontrattuali<br>
+        • Adempimento di un obbligo legale al quale è soggetto il Titolare<br><br>
+        <strong>Conseguenze di un rifiuto</strong><br>
+        Il mancato conferimento dei dati personali comporterà l’impossibilità di dar corso a contratti ed altri adempimenti connessi, nonché di gestire correttamente le reciproche relazioni commerciali.<br><br>
+        <strong>Logica del processo automatizzato</strong><br>
+        Non è presente alcun processo automatizzato.<br><br>
+        <strong>Trasferimento a paesi terzi</strong><br>
+        Non sono previsti trasferimenti dei dati verso paesi terzi.<br><br>
+        <strong>Finalità del trattamento</strong><br>
+        I dati personali da Lei forniti saranno trattati per finalità connesse all’esecuzione del contratto, compresa l’eventuale fase precontrattuale. Previo uno specifico e distinto consenso, i dati potranno inoltre essere trattati per: invio di comunicazioni commerciali e/o promozionali (e-mail, posta, sms, telefono, newsletter, messaggistica); rilevazione del grado di soddisfazione; trasmissione a soggetti incaricati per attività informative, commerciali, pubblicitarie o promozionali; statistiche. Il consenso per tali finalità è facoltativo e non interferisce con le finalità connesse al rapporto negoziale di base.<br><br>
+        <strong>Modalità del trattamento</strong><br>
+        Il trattamento avverrà mediante strumenti idonei a garantire sicurezza e riservatezza, con strumenti elettronici e/o automatizzati oppure manuali, solo con strumenti autorizzati e ritenuti idonei.<br><br>
+        <strong>Destinatari</strong><br>
+        Amministrazioni e autorità pubbliche; compagnie assicuratrici; enti e aziende per sanità pubblica; organismi di controllo; società e professionisti per aspetti legali, obblighi amministrativi e sistemi informatici; società di recupero credito.<br><br>
+        <strong>Termini di conservazione</strong><br>
+        10 anni.<br><br>
+        <strong>Origine dei dati</strong><br>
+        Attraverso il sito web (form); e-mail; eventi; fase precontrattuale / contrattuale / accettazione.<br><br>
+        <strong>Diritti dell’interessato</strong><br>
+        Accesso, rettifica, cancellazione, integrazione, limitazione, opposizione, portabilità (ove applicabile), reclamo al Garante. I diritti possono essere esercitati scrivendo a: <strong>info@termocinque.it</strong>
+      </div>
+      <div class="box">
+        <strong style="display:block;margin-bottom:8px;">Consenso al trattamento dei dati personali *</strong>
+        <p style="font-size:.82em;color:var(--muted);margin-bottom:12px;">Acquisite le informazioni di cui all’art. 13 GDPR 679/2016, il/la sottoscritto/a:</p>
+        <div class="radio-row">
+          <label><input type="radio" name="consenso" value="SI - Esprimo il consenso"> Esprime il consenso</label>
+          <label><input type="radio" name="consenso" value="NO - Nego il consenso"> Nega il consenso</label>
+        </div>
+        <p style="font-size:.78em;color:var(--muted);margin-top:10px;">al trattamento dei dati per le finalità connesse all’esecuzione del contratto e, ove espresso, alle finalità facoltative indicate nell’informativa.</p>
+      </div>
+      <h2>La sua firma</h2>
+      <p style="font-size:.88em;color:var(--muted);margin-bottom:8px;">Disegni la firma qui sotto (mouse o dito sul telefono).</p>
+      <canvas id="sigCanvas" class="sig"></canvas>
+      <button type="button" class="clear-btn" onclick="clearSig('sigCanvas')">Pulisci</button>
+      <div class="nav"><button type="button" class="btn-primary" onclick="goStep2()">Continua</button></div>
+    </div>
+
+    <div id="step2" class="hidden">
+      <h1>Qualche domanda per aiutarla</h1>
+      <p class="intro">In base alle risposte prepareremo solo ciò che le serve.</p>
+      <h2>Usufruisce di un finanziamento?</h2>
+      <div class="choice-card" id="card_fin_no" onclick="selectFin('no')">
+        <input type="radio" name="finanziamento" value="no" id="fin_no">
+        <div><strong>No</strong><span>Nessun finanziamento collegato</span></div>
+      </div>
+      <div class="choice-card" id="card_fin_si" onclick="selectFin('si')">
+        <input type="radio" name="finanziamento" value="si" id="fin_si">
+        <div><strong>Sì</strong><span>Le chiederemo alcuni dati e i documenti di identità e reddito</span></div>
+      </div>
+      <h2>Desidera una detrazione o un incentivo?</h2>
+      <div class="choice-card" id="card_det_nessuna" onclick="selectDet('nessuna')">
+        <input type="radio" name="tipo_detrazione" value="nessuna" id="det_nessuna">
+        <div><strong>No, nessuna</strong><span>Procediamo senza pratiche di detrazione</span></div>
+      </div>
+      <div class="choice-card" id="card_det_fiscale" onclick="selectDet('fiscale')">
+        <input type="radio" name="tipo_detrazione" value="fiscale" id="det_fiscale">
+        <div><strong>Sì, detrazione fiscale 50% o 36%</strong><span>Per la detrazione è necessaria la delega ENEA</span></div>
+      </div>
+      <div class="choice-card" id="card_det_ct" onclick="selectDet('conto_termico')">
+        <input type="radio" name="tipo_detrazione" value="conto_termico" id="det_ct">
+        <div><strong>Sì, Conto Termico 3.0</strong><span>Prepareremo l’affidamento e il mandato all’incasso</span></div>
+      </div>
+      <div class="nav">
+        <button type="button" class="btn-secondary" onclick="goStep(1)">Indietro</button>
+        <button type="button" class="btn-primary" onclick="goStep3()">Continua</button>
+      </div>
+    </div>
+
+    <div id="step3" class="hidden">
+      <h1>Qualche dettaglio in più</h1>
+      <p class="intro">Solo le informazioni necessarie.</p>
+      <div id="block_immobile" class="hidden">
+        <h2>Immobile oggetto dei lavori</h2>
+        <div class="row"><div class="field full"><label>Indirizzo</label><input type="text" id="indirizzo_immobile"></div></div>
+        <div class="row">
+          <div class="field small"><label>CAP</label><input type="text" id="cap_immobile"></div>
+          <div class="field"><label>Città</label><input type="text" id="citta_immobile"></div>
+          <div class="field small"><label>Prov.</label><input type="text" id="prov_immobile"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Anno costruzione</label><input type="text" id="anno_costruzione"></div>
+          <div class="field"><label>Superficie mq</label><input type="text" id="superficie_mq"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Categoria catastale</label><input type="text" id="categoria_catastale"></div>
+          <div class="field"><label>Titolo sull’immobile</label>
+            <select id="titolo_immobile"><option value="">—</option><option>Proprietà</option><option>Usufrutto</option><option>Locazione</option><option>Comodato</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Foglio</label><input type="text" id="foglio"></div>
+          <div class="field"><label>Particella</label><input type="text" id="particella"></div>
+          <div class="field"><label>Subalterno</label><input type="text" id="subalterno"></div>
+        </div>
+      </div>
+      <div id="block_enea" class="hidden">
+        <h2>Per la detrazione fiscale</h2>
+        <div class="row">
+          <div class="field"><label>N. appartamenti nello stabile</label><input type="text" id="n_appartamenti"></div>
+          <div class="field"><label>Prodotto sostituito</label><input type="text" id="prodotto_sostituito"></div>
+        </div>
+      </div>
+      <div id="block_ct" class="hidden">
+        <h2>Conto Termico 3.0</h2>
+        <div class="row">
+          <div class="field"><label>PIN GSE (se già iscritto)</label><input type="text" id="pin_gse"></div>
+          <div class="field"><label>Importo incentivo €</label><input type="text" id="importo_incentivo"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Soggetto ammesso</label>
+            <select id="soggetto_ammesso"><option value="">—</option><option>Cliente privato</option><option>Azienda</option><option>Pubblica amministrazione / Ente</option></select>
+          </div>
+          <div class="field"><label>Configurazione impianto</label>
+            <select id="configurazione_impianto"><option value="">—</option><option>centralizzato → centralizzato</option><option>autonomo → autonomo</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Data di accatastamento</label><input type="text" id="data_accatastamento" placeholder="GG/MM/AAAA" inputmode="numeric" maxlength="10"></div>
+        </div>
+
+        <h2 style="margin-top:28px">Dichiarazione di affidamento – note legali</h2>
+        <p style="font-size:.8em;color:var(--muted);margin-bottom:8px;">* Termocinque – Panzini SRL si riserva di affidare la gestione della pratica CT a consulenti esterni fidelizzati.</p>
+        <div class="privacy" style="max-height:300px;font-size:.78em;line-height:1.45">
+          <strong>DICHIARAZIONE DI AFFIDAMENTO – Pratica Conto Termico 3.0 (DM 7 agosto 2025)</strong><br><br>
+          Il sottoscritto dichiara, sotto la propria responsabilità, di fornire i dati anagrafici necessari per l’emissione della fattura relativa all’intervento di installazione dell’impianto di climatizzazione con pompa di calore, eseguito presso l’immobile indicato.<br><br>
+          Dichiara inoltre:<br>
+          • Di voler usufruire dell’incentivo previsto dal Conto Termico 3.0 ai sensi del DM 7 agosto 2025.<br>
+          • Di voler incaricare Termocinque – Panzini SRL del caricamento e della gestione della pratica di richiesta incentivo Conto Termico 3.0 e di autorizzarla a operare sul portale GSE per proprio conto mediante un’utenza GSE intestata al sottoscritto, impegnandosi a collaborare per tutte le fasi di autenticazione richieste dal GSE.<br>
+          • Di conferire a Termocinque – Panzini SRL mandato all’incasso irrevocabile, limitatamente all’incentivo riconosciuto dal GSE nell’ambito della presente pratica, fino a concorrenza dell’importo indicato, autorizzando il GSE all’erogazione delle somme direttamente in favore di Termocinque – Panzini SRL.<br><br>
+          Si dichiara inoltre:<br>
+          • Di essere in possesso di tutti i requisiti soggettivi e oggettivi richiesti dalla normativa vigente.<br>
+          • Di impegnarsi, in caso di rigetto, riduzione o revoca, a corrispondere a Termocinque – Panzini SRL l’importo eventualmente anticipato o scontato, senza eccezioni o riserve.<br>
+          • Di essere il SOGGETTO RESPONSABILE dell’intervento ai fini del Conto Termico 3.0 e che Termocinque – Panzini SRL opera esclusivamente in qualità di soggetto incaricato alla gestione della pratica.<br><br>
+          <strong>Condizioni di validità</strong><br>
+          Se anche uno solo dei requisiti non è soddisfatto o non verificabile, lo sconto Conto Termico 3.0 NON potrà essere applicato.<br>
+          • Stato dell’immobile: non di nuova costruzione<br>
+          • Edifici con più unità: l’intervento è riconducibile a un unico Soggetto Responsabile<br>
+          • Il sottoscritto dichiara che alla data del 25 dicembre 2025 l’edificio/unità era dotato/a di impianto di climatizzazione invernale esistente e funzionante, e che il libretto di impianto (o documentazione integrativa) è disponibile<br>
+          • Intervento: sostituzione di impianto di climatizzazione invernale esistente (totale o parziale)<br>
+          • I pagamenti devono essere effettuati esclusivamente dal Soggetto Responsabile<br><br>
+          <strong>Consapevolezza</strong><br>
+          • Il Conto Termico non è uno sconto automatico<br>
+          • Il GSE può ridurre o negare l’incentivo in caso di non conformità<br>
+          • In tal caso, il cliente resta obbligato a corrispondere a Termocinque – Panzini SRL l’intero importo della fornitura e dell’installazione
+        </div>
+
+        <h2 style="margin-top:28px">Mandato irrevocabile all’incasso – note legali</h2>
+        <div class="privacy" style="max-height:260px;font-size:.78em;line-height:1.45">
+          Tra <strong>Termocinque – Panzini SRL</strong> («Mandatario») e il sottoscritto («Mandante»).<br><br>
+          Premesso che il Mandante presenterà Richiesta di Concessione Incentivi al GSE ai sensi del D.M. del 7 agosto 2025, le parti convengono che:<br><br>
+          <strong>Art. 1 – Oggetto</strong><br>
+          Il Mandante, ai sensi dell’art. 1723, comma 2, c.c., conferisce al Mandatario mandato irrevocabile ad incassare tutti i crediti vantati verso il GSE derivanti dall’accoglimento della Richiesta di Concessione Incentivi.<br><br>
+          <strong>Art. 2 – Destinazione delle somme</strong><br>
+          Il GSE provvederà a pagare il credito, al netto dei corrispettivi spettanti al GSE, direttamente in favore del Mandatario, mediante bonifico sul IBAN:<br>
+          <strong>IT 29 P 02008 37261 000005465059</strong><br><br>
+          <strong>Art. 3 – Comunicazioni</strong><br>
+          In forma scritta (raccomandata o e-mail) agli indirizzi delle parti e al GSE (Viale Maresciallo Pilsudski 92, 00197 Roma). Mandatario: info@termocinque.it
+        </div>
+        <p style="font-size:.88em;color:var(--muted);margin:12px 0 8px;">Con la firma conferma di aver letto e accettato le dichiarazioni di affidamento e il mandato all’incasso.</p>
+        <canvas id="sigCt" class="sig"></canvas>
+        <button type="button" class="clear-btn" onclick="clearSig('sigCt')">Pulisci</button>
+      </div>
+      <div id="block_fin" class="hidden">
+        <h2>Dati per il finanziamento</h2>
+        <div class="row">
+          <div class="field"><label>Stato civile</label><input type="text" id="stato_civile"></div>
+          <div class="field"><label>Titolo proprietà residenza</label>
+            <select id="titolo_proprieta_residenza"><option value="">—</option><option>Proprietario</option><option>Affittuario</option><option>Altro</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Membri nucleo</label><input type="text" id="n_membri"></div>
+          <div class="field"><label>Figli a carico</label><input type="text" id="n_figli"></div>
+          <div class="field"><label>Persona esposta politicamente</label>
+            <select id="pep"><option value="">—</option><option>NO</option><option>SI</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Tipo reddito</label>
+            <select id="tipo_reddito"><option value="">—</option><option>Dipendente</option><option>Pensionato</option><option>Libero professionista</option></select>
+          </div>
+          <div class="field"><label>Professione</label><input type="text" id="professione"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>IBAN</label><input type="text" id="iban"></div>
+          <div class="field"><label>Anno apertura CC</label><input type="text" id="anno_cc"></div>
+        </div>
+        <div class="row"><div class="field full"><label>N. pratica finanziamento</label><input type="text" id="numero_pratica"></div></div>
+      </div>
+      <div id="block_firma_iva" class="hidden">
+        <h2>Dichiarazione IVA agevolata 10%</h2>
+        <div class="privacy" style="max-height:280px;font-size:.82em;line-height:1.5">
+          <strong>Dichiara</strong><br><br>
+          Sotto la propria esclusiva responsabilità, che l’intervento di manutenzione rientra tra gli interventi di recupero del patrimonio edilizio consistenti in:<br>
+          • interventi di manutenzione ordinaria / straordinaria<br>
+          rispettivamente art. 3, comma 1, lett. a) e lett. b) D.P.R. 380/2001<br><br>
+          Ove previsto dai regolamenti edilizi locali, per maggior chiarimento si allega fotocopia della denuncia di inizio attività o dell’autorizzazione edilizia.<br><br>
+          e, pertanto, chiede l’applicazione dell’aliquota IVA 10% nei limiti previsti di cui all’art. 7, comma 1, lettera b) legge 488/1999 e succ. modifiche.<br><br>
+          Il sottoscritto, consapevole delle responsabilità anche penali che si assume con la sottoscrizione della presente richiesta, dichiara di avere i requisiti per l’IVA ridotta e si impegna a dare tempestiva comunicazione scritta alla ditta fornitrice al sopraggiungere di ogni eventuale fatto o circostanza che faccia venire meno il diritto alla sopra indicata agevolazione, al fine di consentirvi l’emissione della fattura integrativa per la differenza di aliquota, secondo quanto previsto dall’art. 26, comma 1 D.P.R. 633 del 26 ottobre 1972 e successive modificazioni.<br><br>
+          Si impegna altresì a rendere indenne la ditta fornitrice da ogni costo ed onere derivante da eventuali contestazioni mosse da parte degli uffici finanziari in merito alla aliquota agevolata oggetto della presente richiesta, e più precisamente si impegna a rifondere le differenze di imposta, le sanzioni e le spese pecuniarie.<br><br>
+          Per info: <a href="https://www.agenziaentrate.gov.it/portale/lavori-di-manutenzione-ordinaria-e-straordinaria-ristrutturazione-2025" target="_blank" rel="noopener">Agenzia delle Entrate – manutenzione ordinaria e straordinaria</a>
+        </div>
+        <p style="font-size:.88em;color:var(--muted);margin:12px 0 8px;">Con la firma conferma di aver letto e accettato quanto sopra.</p>
+        <canvas id="sigIva" class="sig"></canvas>
+        <button type="button" class="clear-btn" onclick="clearSig('sigIva')">Pulisci</button>
+      </div>
+      <div class="nav">
+        <button type="button" class="btn-secondary" onclick="backFromStep3()">Indietro</button>
+        <button type="button" class="btn-primary" onclick="goStep4()">Continua</button>
+      </div>
+    </div>
+
+    <div id="step4" class="hidden">
+      <h1>I suoi documenti</h1>
+      <p class="intro">Carichi le foto o i file. Sul telefono può anche scattare al momento.</p>
+      <div id="block_upload" class="hidden">
+        <div class="upload-box">
+          <label class="title">Carta d’identità</label>
+          <div class="upload-row">
+            <div class="upload-col">
+              <label>Fronte *</label>
+              <input type="file" id="ci_fronte" accept="image/*,application/pdf" capture="environment" onchange="previewFile(this,'prev_ci_f')">
+              <img id="prev_ci_f" class="upload-preview" alt="">
+            </div>
+            <div class="upload-col">
+              <label>Retro</label>
+              <input type="file" id="ci_retro" accept="image/*,application/pdf" capture="environment" onchange="previewFile(this,'prev_ci_r')">
+              <img id="prev_ci_r" class="upload-preview" alt="">
+            </div>
+          </div>
+          <div class="hint">Se ha un unico file con fronte e retro, carichi solo il fronte: uniremo tutto in un solo documento.</div>
+        </div>
+        <div class="upload-box">
+          <label class="title">Tessera sanitaria</label>
+          <div class="upload-row">
+            <div class="upload-col">
+              <label>Fronte *</label>
+              <input type="file" id="ts_fronte" accept="image/*,application/pdf" capture="environment" onchange="previewFile(this,'prev_ts_f')">
+              <img id="prev_ts_f" class="upload-preview" alt="">
+            </div>
+            <div class="upload-col">
+              <label>Retro</label>
+              <input type="file" id="ts_retro" accept="image/*,application/pdf" capture="environment" onchange="previewFile(this,'prev_ts_r')">
+              <img id="prev_ts_r" class="upload-preview" alt="">
+            </div>
+          </div>
+          <div class="hint">Stesso principio: un solo file se fronte e retro sono insieme.</div>
+        </div>
+      </div>
+      <div id="block_upload_reddito" class="hidden">
+        <div class="upload-box">
+          <label class="title">Documento di reddito *</label>
+          <input type="file" id="doc_reddito" accept="image/*,application/pdf" capture="environment" onchange="previewFile(this,'prev_reddito')">
+          <img id="prev_reddito" class="upload-preview" alt="">
+          <div class="hint">Ultima busta paga, cedolino pensione oppure dichiarazione dei redditi.</div>
+        </div>
+      </div>
+      <div id="no_upload_msg" class="gentle hidden">Perfetto: per le sue scelte non servono altri allegati. Può andare avanti.</div>
+      <div class="nav">
+        <button type="button" class="btn-secondary" onclick="goStep(3)">Indietro</button>
+        <button type="button" class="btn-primary" onclick="goStep5()">Continua</button>
+      </div>
+    </div>
+
+    <div id="step5" class="hidden">
+      <h1>Siamo quasi pronti</h1>
+      <p class="intro">Quando è a suo agio, invii pure. Ci occupiamo noi del resto.</p>
+      <div class="gentle" id="riepilogo"></div>
+      <div class="nav">
+        <button type="button" class="btn-secondary" onclick="backFromStep5()">Indietro</button>
+        <button type="button" class="btn-primary" id="submitBtn" onclick="inviaTutto()">Invia i documenti</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">TERMOCINQUE – PANZINI S.R.L. · P.IVA 01469270423 · Via della Repubblica 5, 60020 Sirolo (AN)</div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSLR0eNdYOXSQcikutgTPUm5IuaaAtPlKWb-iw6T8UKUACrpj5TDM9knURbZ_b3SoZ/exec';
+
+function setupSig(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let painting = false, lastX = 0, lastY = 0;
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+    ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000';
+  }
+  resize();
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: (e.touches ? e.touches[0].clientX : e.clientX) - r.left, y: (e.touches ? e.touches[0].clientY : e.clientY) - r.top };
+  }
+  function start(e) { e.preventDefault(); painting = true; const p = pos(e); lastX = p.x; lastY = p.y; ctx.beginPath(); ctx.moveTo(lastX, lastY); }
+  function end(e) { if (e.type === 'mouseup' || e.type === 'touchend' || e.type === 'touchcancel') { painting = false; ctx.beginPath(); } }
+  function draw(e) {
+    if (e.type === 'mousemove' && e.buttons === 1) painting = true;
+    if (!painting) return;
+    e.preventDefault();
+    const p = pos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  canvas.onmousedown = start; canvas.onmouseup = end; canvas.onmousemove = draw;
+  canvas.onmouseenter = e => { if (e.buttons === 1) { painting = true; const p = pos(e); lastX = p.x; lastY = p.y; } };
+  canvas.ontouchstart = e => { start(e); };
+  canvas.ontouchend = end; canvas.ontouchcancel = end;
+  canvas.ontouchmove = e => { draw(e); };
+  window.addEventListener('mouseup', () => { painting = false; ctx.beginPath(); });
+  window.addEventListener('resize', resize);
+}
+function clearSig(id) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  setupSig(id);
+  const ctx = c.getContext('2d');
+  const r = c.getBoundingClientRect();
+  ctx.clearRect(0, 0, r.width, r.height);
+}
+window.addEventListener('load', () => setupSig('sigCanvas'));
+
+function setPills(n) {
+  document.querySelectorAll('.step-pill').forEach(p => {
+    const s = +p.dataset.step;
+    p.classList.toggle('active', s === n);
+    p.classList.toggle('done', s < n);
+  });
+}
+function goStep(n) {
+  [1,2,3,4,5].forEach(i => document.getElementById('step' + i).classList.add('hidden'));
+  document.getElementById('step' + n).classList.remove('hidden');
+  setPills(n);
+  window.scrollTo(0, 0);
+  if (n === 3) setTimeout(() => { setupSig('sigIva'); setupSig('sigCt'); }, 30);
+}
+function toggleTipo() {
+  const isP = document.querySelector('input[name="tipo_soggetto"]:checked').value === 'privato';
+  document.getElementById('sez_privato').classList.toggle('hidden', !isP);
+  document.getElementById('sez_ditta').classList.toggle('hidden', isP);
+}
+function toggleRiba() {
+  document.getElementById('riba_section').classList.toggle('hidden', document.getElementById('modalita_pagamento').value !== 'RIBA');
+}
+function selectFin(v) {
+  document.getElementById(v === 'si' ? 'fin_si' : 'fin_no').checked = true;
+  document.getElementById('card_fin_si').classList.toggle('selected', v === 'si');
+  document.getElementById('card_fin_no').classList.toggle('selected', v === 'no');
+}
+function selectDet(v) {
+  const map = { nessuna: 'det_nessuna', fiscale: 'det_fiscale', conto_termico: 'det_ct' };
+  document.getElementById(map[v]).checked = true;
+  document.getElementById('card_det_nessuna').classList.toggle('selected', v === 'nessuna');
+  document.getElementById('card_det_fiscale').classList.toggle('selected', v === 'fiscale');
+  document.getElementById('card_det_ct').classList.toggle('selected', v === 'conto_termico');
+}
+function getFin() { return document.querySelector('input[name="finanziamento"]:checked')?.value || null; }
+function getDet() { return document.querySelector('input[name="tipo_detrazione"]:checked')?.value || null; }
+function computeDocs() {
+  const isPrivato = document.querySelector('input[name="tipo_soggetto"]:checked').value === 'privato';
+  const docs = ['anagrafica'];
+  if (!isPrivato) return docs;
+  docs.push('iva_agevolata');
+  if (getFin() === 'si') docs.push('finanziamento', 'conferma_consegna');
+  if (getDet() === 'fiscale') docs.push('enea');
+  if (getDet() === 'conto_termico') docs.push('conto_termico', 'mandato_incasso');
+  return docs;
+}
+function needCI() { return getFin() === 'si' || getDet() === 'conto_termico'; }
+function needReddito() { return getFin() === 'si'; }
+
+
+function formatDateInput(el) {
+  el.addEventListener('input', function() {
+    let v = el.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length >= 5) v = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4);
+    else if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+    el.value = v;
+  });
+  el.addEventListener('blur', function() {
+    const v = el.value.trim();
+    if (!v) { el.classList.remove('invalid'); return; }
+    const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v);
+    if (!m) { el.classList.add('invalid'); return; }
+    const d = +m[1], mo = +m[2], y = +m[3];
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d || y < 1900 || y > 2100) {
+      el.classList.add('invalid');
+    } else {
+      el.classList.remove('invalid');
+    }
+  });
+}
+
+function isValidEmail(s) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((s || '').trim());
+}
+
+function setupEmailValidation(el) {
+  el.addEventListener('blur', function() {
+    if (!el.value.trim()) { el.classList.remove('invalid'); return; }
+    el.classList.toggle('invalid', !isValidEmail(el.value));
+  });
+  el.addEventListener('input', function() {
+    if (el.classList.contains('invalid') && isValidEmail(el.value)) el.classList.remove('invalid');
+  });
+}
+
+window.addEventListener('load', function() {
+  const dn = document.getElementById('data_nascita');
+  if (dn) formatDateInput(dn);
+  const da = document.getElementById('data_accatastamento');
+  if (da) formatDateInput(da);
+  const em = document.getElementById('email');
+  if (em) setupEmailValidation(em);
+});
+
+function collectAnagrafica() {
+  const isP = document.querySelector('input[name="tipo_soggetto"]:checked').value === 'privato';
+  return {
+    tipo_soggetto: isP ? 'privato' : 'ditta',
+    ragione_sociale: isP ? '' : (document.getElementById('ragione_sociale').value || ''),
+    cognome: isP ? document.getElementById('cognome').value : (document.getElementById('cognome_ref').value || ''),
+    nome: isP ? document.getElementById('nome').value : (document.getElementById('nome_ref').value || ''),
+    codice_fiscale: isP ? document.getElementById('codice_fiscale').value : (document.getElementById('cf_ditta').value || ''),
+    partita_iva: document.getElementById('partita_iva')?.value || '',
+    cf_ditta: document.getElementById('cf_ditta')?.value || '',
+    codice_univoco: document.getElementById('codice_univoco')?.value || '',
+    pec: document.getElementById('pec')?.value || '',
+    luogo_nascita: document.getElementById('luogo_nascita')?.value || '',
+    data_nascita: document.getElementById('data_nascita')?.value || '',
+    indirizzo: document.getElementById('indirizzo').value,
+    cap: document.getElementById('cap').value,
+    citta: document.getElementById('citta').value,
+    prov: document.getElementById('prov').value,
+    indirizzo_lavori: document.getElementById('indirizzo_lavori').value,
+    telefono: document.getElementById('telefono').value,
+    email: document.getElementById('email').value,
+    modalita_pagamento: document.getElementById('modalita_pagamento').value,
+    banca_appoggio: document.getElementById('banca_appoggio')?.value || '',
+    abi: document.getElementById('abi')?.value || '',
+    cab: document.getElementById('cab')?.value || '',
+    consenso: document.querySelector('input[name="consenso"]:checked')?.value || '',
+    firma_base64: document.getElementById('sigCanvas').toDataURL('image/png')
+  };
+}
+
+function goStep2() {
+  const a = collectAnagrafica();
+  if (!a.email) { alert('Indichi pure la sua email'); document.getElementById('email').classList.add('invalid'); return; }
+  if (!isValidEmail(a.email)) { alert('Indichi un indirizzo email valido'); document.getElementById('email').classList.add('invalid'); return; }
+  if (!a.consenso) { alert('Ci serve il consenso privacy per proseguire'); return; }
+  if (a.data_nascita) {
+    const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(a.data_nascita.trim());
+    let bad = !m;
+    if (m) {
+      const d=+m[1], mo=+m[2], y=+m[3];
+      const dt=new Date(y,mo-1,d);
+      if (dt.getFullYear()!==y||dt.getMonth()!==mo-1||dt.getDate()!==d||y<1900||y>2100) bad=true;
+    }
+    if (bad) { alert('La data di nascita deve essere nel formato GG/MM/AAAA'); document.getElementById('data_nascita').classList.add('invalid'); return; }
+  }
+  if (a.tipo_soggetto === 'privato' && (!a.cognome || !a.nome || !a.codice_fiscale)) {
+    alert('Compili cognome, nome e codice fiscale'); return;
+  }
+  if (a.tipo_soggetto === 'ditta' && !a.ragione_sociale) {
+    alert('Indichi la ragione sociale'); return;
+  }
+  document.getElementById('indirizzo_immobile').value = a.indirizzo;
+  document.getElementById('cap_immobile').value = a.cap;
+  document.getElementById('citta_immobile').value = a.citta;
+  document.getElementById('prov_immobile').value = a.prov;
+  if (a.tipo_soggetto === 'ditta') {
+    document.getElementById('riepilogo').textContent = 'Abbiamo tutto ciò che serve. Può inviare: prepareremo la sua anagrafica.';
+    goStep(5);
+    return;
+  }
+  goStep(2);
+}
+
+function goStep3() {
+  if (!getFin()) { alert('Ci indichi se usufruisce di un finanziamento'); return; }
+  if (!getDet()) { alert('Ci indichi se desidera una detrazione'); return; }
+  const docs = computeDocs();
+  const needImmobile = docs.some(d => ['iva_agevolata','enea','conto_termico'].includes(d));
+  document.getElementById('block_immobile').classList.toggle('hidden', !needImmobile);
+  document.getElementById('block_enea').classList.toggle('hidden', !docs.includes('enea'));
+  document.getElementById('block_ct').classList.toggle('hidden', !docs.includes('conto_termico'));
+  document.getElementById('block_fin').classList.toggle('hidden', !docs.includes('finanziamento'));
+  document.getElementById('block_firma_iva').classList.toggle('hidden', !docs.includes('iva_agevolata'));
+  goStep(3);
+}
+
+function backFromStep3() {
+  goStep(document.querySelector('input[name="tipo_soggetto"]:checked').value === 'privato' ? 2 : 1);
+}
+
+function goStep4() {
+  // Se non servono allegati, salta direttamente al riepilogo
+  if (!needCI() && !needReddito()) {
+    document.getElementById('riepilogo').textContent =
+      'Grazie. Cliccando su «Invia i documenti» invieremo tutto in modo sicuro a Termocinque.';
+    goStep(5);
+    return;
+  }
+  document.getElementById('block_upload').classList.toggle('hidden', !needCI());
+  document.getElementById('block_upload_reddito').classList.toggle('hidden', !needReddito());
+  document.getElementById('no_upload_msg').classList.add('hidden');
+  goStep(4);
+}
+
+
+function backFromStep5() {
+  if (needCI() || needReddito()) goStep(4);
+  else goStep(3);
+}
+
+function goStep5() {
+  if (needCI()) {
+    if (!document.getElementById('ci_fronte').files.length) { alert('Carichi la carta d\'identità (almeno il fronte)'); return; }
+    if (!document.getElementById('ts_fronte').files.length) { alert('Carichi la tessera sanitaria (almeno il fronte)'); return; }
+  }
+  if (needReddito() && !document.getElementById('doc_reddito').files.length) {
+    alert('Carichi il documento di reddito'); return;
+  }
+  document.getElementById('riepilogo').textContent =
+    'Grazie. Cliccando su «Invia i documenti» invieremo tutto in modo sicuro a Termocinque.';
+  goStep(5);
+}
+
+function previewFile(input, imgId) {
+  const img = document.getElementById(imgId);
+  if (input.files && input.files[0] && input.files[0].type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; img.style.display = 'block'; };
+    reader.readAsDataURL(input.files[0]);
+  } else { img.style.display = 'none'; }
+}
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) { resolve(null); return; }
+    if (!file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => resolve({ type: 'pdf', data: reader.result });
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => resolve({ type: 'image', img });
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function mergeFrontBack(frontFile, backFile) {
+  const front = await loadImage(frontFile);
+  if (!front) return null;
+  if (front.type === 'pdf') return front.data;
+  const back = backFile ? await loadImage(backFile) : null;
+  if (!back || back.type !== 'image') {
+    const c = document.createElement('canvas');
+    c.width = front.img.width; c.height = front.img.height;
+    c.getContext('2d').drawImage(front.img, 0, 0);
+    return c.toDataURL('image/jpeg', 0.88);
+  }
+  const w = Math.max(front.img.width, back.img.width);
+  const h = front.img.height + back.img.height + 12;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(front.img, 0, 0);
+  ctx.drawImage(back.img, 0, front.img.height + 12);
+  return c.toDataURL('image/jpeg', 0.88);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) { resolve(null); return; }
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function inviaTutto() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Invio in corso...';
+
+  const data = collectAnagrafica();
+  data.documenti = computeDocs();
+  data.finanziamento = getFin() || 'no';
+  data.tipo_detrazione = getDet() || 'nessuna';
+
+  if (data.documenti.includes('iva_agevolata')) {
+    const ivaCanvas = document.getElementById('sigIva');
+    data.firma_iva = ivaCanvas ? ivaCanvas.toDataURL('image/png') : data.firma_base64;
+  }
+  if (data.documenti.includes('conto_termico') || data.documenti.includes('mandato_incasso')) {
+    const ctCanvas = document.getElementById('sigCt');
+    data.firma_ct = ctCanvas ? ctCanvas.toDataURL('image/png') : data.firma_base64;
+  }
+
+  ['indirizzo_immobile','cap_immobile','citta_immobile','prov_immobile','anno_costruzione','superficie_mq',
+   'categoria_catastale','titolo_immobile','foglio','particella','subalterno','n_appartamenti','prodotto_sostituito',
+   'pin_gse','importo_incentivo','soggetto_ammesso','configurazione_impianto','stato_civile','titolo_proprieta_residenza',
+   'n_membri','n_figli','pep','tipo_reddito','professione','iban','anno_cc','numero_pratica'
+  ].forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+
+  try {
+    data.ci_documento = await mergeFrontBack(document.getElementById('ci_fronte').files[0], document.getElementById('ci_retro').files[0]);
+    data.tessera_sanitaria = await mergeFrontBack(document.getElementById('ts_fronte').files[0], document.getElementById('ts_retro').files[0]);
+    data.doc_reddito = await fileToBase64(document.getElementById('doc_reddito').files[0]);
+  } catch (err) {
+    alert('Si è verificato un problema con i file. Riprovi pure.');
+    btn.disabled = false; btn.textContent = 'Invia i documenti'; return;
+  }
+
+  const timeout = setTimeout(() => {
+    alert('L\'invio sta richiedendo più tempo del previsto. Controlli pure la posta o riprovi tra poco.');
+    btn.disabled = false; btn.textContent = 'Invia i documenti';
+  }, 90000);
+
+  fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data), redirect: 'follow' })
+    .then(r => { clearTimeout(timeout); return r.text(); })
+    .then(txt => {
+      console.log(txt);
+      let ok = true;
+      try { const j = JSON.parse(txt); if (j.result === 'error') { ok = false; alert('Non siamo riusciti a completare l\'invio: ' + j.message); } } catch (_) {}
+      if (ok) { alert('Grazie! I documenti sono stati inviati correttamente.'); location.reload(); }
+      else { btn.disabled = false; btn.textContent = 'Invia i documenti'; }
+    })
+    .catch(() => {
+      clearTimeout(timeout);
+      alert('Problema di connessione. Riprovi pure tra un momento.');
+      btn.disabled = false; btn.textContent = 'Invia i documenti';
+    });
+}
+</script>
+</body>
+</html>
